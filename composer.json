@@ -1,5 +1,5 @@
 {
-    "name": "ctessier/nova-advanced-image-field",
+    "name": "takdw/nova-advanced-image-field",
     "description": "An advanced image field for Nova with crop and resize.",
     "keywords": [
         "laravel",
@@ -20,13 +20,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Ctessier\\NovaAdvancedImageField\\": "src/"
+            "Takdw\\NovaAdvancedImageField\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Ctessier\\NovaAdvancedImageField\\FieldServiceProvider"
+                "Takdw\\NovaAdvancedImageField\\FieldServiceProvider"
             ]
         }
     },
