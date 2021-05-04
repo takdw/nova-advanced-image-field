@@ -93,6 +93,7 @@ export default {
         file: null,
         fileName: '',
         uploadErrors: new Errors(),
+        cropper: null,
     }),
 
     mounted() {
@@ -160,6 +161,7 @@ export default {
          * Set the data and init the crop box if the image is croppable
          */
         fileChange(e) {
+            this.uploadErrors.clear(this.fieldAttribute)
             let path = e.target.value
             let fileName = path.match(/[^\\/]*$/)[0]
             this.fileName = fileName
@@ -167,8 +169,37 @@ export default {
 
             const file = e.target.files[0]
             if (!file.type.includes('image/')) {
-                alert(this.__('Please select an image file'))
+                this.uploadErrors.record({
+                    [this.fieldAttribute]: [this.__('Please select an image file')],
+                })
+                this.cancel()
                 return
+            }
+
+            const split = fileName.split('.')
+            const supportedTypesSplit = this.field.acceptedTypes.split(',')
+            const supportedTypesSplitLength = supportedTypesSplit.length
+
+            if (supportedTypesSplitLength > 1) {
+                let supportedStr = ''
+                supportedTypesSplit.forEach((type, index) => {
+                    supportedStr += type.substr(1).toUpperCase()
+                    if (supportedTypesSplitLength - 1 === index) {
+                        return
+                    } else if (supportedTypesSplitLength - 2 === index) {
+                        supportedStr += ' or '
+                    } else {
+                        supportedStr += ', '
+                    }
+                })
+
+                if (! supportedTypesSplit.includes('.' + split.pop().toLowerCase())) {
+                    this.cancel()
+                    this.uploadErrors.record({
+                        [this.fieldAttribute]: [this.__(`Please select a ${supportedStr} image type.`)],
+                    })
+                    return
+                }
             }
 
             if (this.field.croppable) {
